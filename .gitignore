@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+coverage/
+*.tsbuildinfo
+*.tgz
+apps/desktop/staging/
+apps/desktop/release/
+
+# Local user data (SQLite database, settings with API key, uploaded materials)
+data/
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Environment / secrets
+.env
+.env.*
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# AI tool / editor workspace files
+.claude/
+.codex/
+.cursor/
+.vscode/
+.idea/

@@ -1,0 +1,1 @@
+ALTER TABLE `sessions` ADD `chunk_id` text NOT NULL;

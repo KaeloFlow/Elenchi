@@ -1,0 +1,11 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { cancelQualityPrep, createQualityPrep, getQualityPrepTask, getQualityPrepTaskForChunk, resumeQualityPrep, startQualityPrep } from "./api.js";
+afterEach(() => vi.unstubAllGlobals());
+const response = (body: unknown, ok = true) => ({ ok, status: ok ? 200 : 409, json: async () => body });
+describe("quality preparation API client", () => {
+  it("creates a task with an optional budget", async () => { const fetchMock = vi.fn().mockResolvedValue(response({ taskId: "t", status: "queued", reason: null })); vi.stubGlobal("fetch", fetchMock); await expect(createQualityPrep("c", { maxCalls: 1, maxTokens: 2, maxDurationMs: 3, maxRepairs: 0 })).resolves.toMatchObject({ taskId: "t" }); expect(fetchMock).toHaveBeenCalledWith("/api/chunks/c/quality-prep", expect.objectContaining({ method: "POST", body: expect.stringContaining("maxCalls") })); });
+  it("recovers the latest task for a chunk", async () => { vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ taskId: "t", chunkId: "c", status: "paused", reason: "interrupted", generation: 2, callsUsed: 1, tokensUsed: 2, checkpointCount: 3 }))); await expect(getQualityPrepTaskForChunk("c")).resolves.toMatchObject({ status: "paused", checkpointCount: 3 }); });
+  it("reads status and checkpoint counters", async () => { vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ taskId: "t", chunkId: "c", status: "running", reason: null, generation: 1, callsUsed: 2, tokensUsed: 3, checkpointCount: 4 }))); await expect(getQualityPrepTask("t")).resolves.toMatchObject({ checkpointCount: 4 }); });
+  it.each([["start", startQualityPrep], ["resume", resumeQualityPrep], ["cancel", cancelQualityPrep]] as const)("posts %s", async (_, call) => { const fetchMock = vi.fn().mockResolvedValue(response({ taskId: "t", status: "running", reason: null })); vi.stubGlobal("fetch", fetchMock); await call("t"); expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("/api/quality-prep/tasks/t/"), expect.objectContaining({ method: "POST" })); });
+  it("surfaces server errors", async () => { vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response({ error: "prep_task_not_found" }, false))); await expect(getQualityPrepTask("missing")).rejects.toThrow("prep_task_not_found"); });
+});

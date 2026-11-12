@@ -1,0 +1,32 @@
+{
+  "name": "elenchi",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Elenchi - Socratic AI learning web app (local-first)",
+  "author": "KaeloFlow",
+  "license": "MIT",
+  "homepage": "https://github.com/KaeloFlow/Elenchi#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaeloFlow/Elenchi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KaeloFlow/Elenchi/issues"
+  },
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:server": "pnpm --filter @elenchi/server dev",
+    "dev:web": "pnpm --filter @elenchi/web dev",
+    "build": "pnpm -r build",
+    "build:desktop": "pnpm --filter @elenchi/web build && pnpm --filter @elenchi/server build && pnpm --filter @elenchi/desktop build",
+    "dist:desktop": "pnpm build:desktop && pnpm --filter @elenchi/desktop dist",
+    "dev:desktop": "pnpm --filter @elenchi/desktop start",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "db:generate": "pnpm --filter @elenchi/server db:generate",
+    "db:migrate": "pnpm --filter @elenchi/server db:migrate"
+  }
+}

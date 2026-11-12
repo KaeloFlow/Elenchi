@@ -1,0 +1,26 @@
+{
+  "name": "@elenchi/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "lint": "eslint src --ext .ts,.tsx",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@elenchi/shared": "workspace:*",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.10",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "4.3.1",
+    "typescript": "5.6.3",
+    "vite": "5.4.8",
+    "vitest": "2.1.4"
+  }
+}

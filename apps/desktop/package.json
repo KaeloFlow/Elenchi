@@ -1,0 +1,83 @@
+{
+  "name": "@elenchi/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Elenchi desktop shell",
+  "main": "dist/main.js",
+  "author": "KaeloFlow",
+  "license": "MIT",
+  "homepage": "https://github.com/KaeloFlow/Elenchi#readme",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "stage:server": "node scripts/stage-server.mjs",
+    "start": "electron .",
+    "pack": "pnpm stage:server && electron-builder --dir",
+    "dist": "pnpm stage:server && electron-builder",
+    "release": "pnpm stage:server && electron-builder --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "6.3.9"
+  },
+  "devDependencies": {
+    "@types/node": "20.16.10",
+    "electron": "32.1.2",
+    "electron-builder": "25.1.8",
+    "typescript": "5.6.3"
+  },
+  "build": {
+    "appId": "com.elenchi.app",
+    "productName": "Elenchi",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../web/dist",
+        "to": "web-dist",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "staging/server",
+        "to": "server-runtime",
+        "filter": [
+          "dist/**/*",
+          "drizzle/**/*",
+          "node_modules/**/*",
+          "package.json"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "npmRebuild": false,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "KaeloFlow",
+        "repo": "Elenchi",
+        "releaseType": "draft"
+      }
+    ]
+  }
+}
